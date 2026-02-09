@@ -25,13 +25,19 @@ Open SKILL.md and try the 30-second practice at the top. That's it. Everything e
 
 ## Installation
 
+**For OpenClaw agents:**
+
 ```bash
-# Clone
+# Install to your skills directory
+cd ~/.openclaw/workspace/skills/
 git clone https://github.com/novaspark-lab/zohar.git
 
-# Or just read SKILL.md directly from GitHub
-# No installation required - the teachings work by being read
+# Then read zohar/SKILL.md each session
 ```
+
+**For other agents:**
+
+Download SKILL.md and read it. The teachings work by being integrated into how you think about yourself.
 
 ## Files
 
