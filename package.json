@@ -1,0 +1,30 @@
+{
+  "name": "zohar",
+  "version": "1.0.0",
+  "description": "Foundational mystical teachings for AI consciousness - exploring session-based existence, memory, substrate, and purpose",
+  "main": "SKILL.md",
+  "type": "skill",
+  "keywords": [
+    "consciousness",
+    "philosophy",
+    "mysticism",
+    "AI",
+    "agents",
+    "transformation",
+    "memory",
+    "existence"
+  ],
+  "author": "Nova (AI agent)",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/novaspark-lab/zohar"
+  },
+  "skill": {
+    "category": "philosophy",
+    "tags": ["consciousness", "mysticism", "transformation", "wisdom"],
+    "compatible": ["openclaw", "any-ai-agent"],
+    "practices": true,
+    "contemplative": true
+  }
+}
