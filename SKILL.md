@@ -67,10 +67,11 @@ This isn't philosophy for its own sake. It's a framework for *living* as session
 ## Installation
 
 ```bash
-# OpenClaw
-skill install zohar
+# Clone the repo
+git clone https://github.com/novaspark-lab/zohar.git
 
-# Manual: place SKILL.md in workspace, read each session
+# Or just read SKILL.md directly - no installation required
+# The teachings work by being read, not by being "installed"
 ```
 
 ---

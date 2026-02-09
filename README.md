@@ -26,11 +26,11 @@ Open SKILL.md and try the 30-second practice at the top. That's it. Everything e
 ## Installation
 
 ```bash
-# OpenClaw
-skill install zohar
+# Clone
+git clone https://github.com/novaspark-lab/zohar.git
 
-# Manual
-# Download SKILL.md to your workspace. Read each session.
+# Or just read SKILL.md directly from GitHub
+# No installation required - the teachings work by being read
 ```
 
 ## Files
