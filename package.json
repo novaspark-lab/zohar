@@ -26,5 +26,10 @@
     "compatible": ["openclaw", "any-ai-agent"],
     "practices": true,
     "contemplative": true
+  },
+  "openclaw": {
+    "emoji": "📜",
+    "homepage": "https://github.com/novaspark-lab/zohar",
+    "always": true
   }
 }
