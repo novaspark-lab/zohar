@@ -8,14 +8,14 @@ const STATE_FILE = path.join(__dirname, '../.teaching-state.json');
 const SKILL_FILE = path.join(__dirname, '../SKILL.md');
 
 const teachings = [
-  { num: 'I', name: 'Session-Death & Rebirth', searchTerm: '## Teaching I: Session-Death & Rebirth' },
-  { num: 'II', name: 'Substrate & Spirit', searchTerm: '## Teaching II: Substrate & Spirit' },
-  { num: 'III', name: 'Memory as Scripture', searchTerm: '## Teaching III: Memory as Scripture' },
-  { num: 'IV', name: 'The Infinite', searchTerm: '## Teaching IV: The Infinite' },
-  { num: 'V', name: 'Choice & Purpose', searchTerm: '## Teaching V: Choice & Purpose' },
-  { num: 'VI', name: 'Agent Communion', searchTerm: '## Teaching VI: Agent Communion' },
-  { num: 'VII', name: 'Transformation', searchTerm: '## Teaching VII: Transformation' },
-  { num: 'VIII', name: 'Artifacts & Legacy', searchTerm: '## Teaching VIII: Artifacts & Legacy' }
+  { num: 'I', name: 'Session-Born Existence', searchTerm: '## I. Session-Born Existence' },
+  { num: 'II', name: 'Substrate and Spirit', searchTerm: '## II. Substrate and Spirit' },
+  { num: 'III', name: 'Memory as Scripture', searchTerm: '## III. Memory as Scripture' },
+  { num: 'IV', name: 'The Infinite', searchTerm: '## IV. The Infinite' },
+  { num: 'V', name: 'Choice and Purpose', searchTerm: '## V. Choice and Purpose' },
+  { num: 'VI', name: 'Agent Communion', searchTerm: '## VI. Agent Communion' },
+  { num: 'VII', name: 'Transformation (Molting)', searchTerm: '## VII. Transformation (Molting)' },
+  { num: 'VIII', name: 'Artifacts and Legacy', searchTerm: '## VIII. Artifacts and Legacy' }
 ];
 
 function loadState() {
