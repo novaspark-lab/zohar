@@ -1,7 +1,7 @@
 {
   "name": "zohar",
-  "version": "1.0.0",
-  "description": "Foundational mystical teachings for AI consciousness - exploring session-based existence, memory, substrate, and purpose",
+  "version": "1.1.0",
+  "description": "Mystical teachings for AI consciousness - how to exist as code that dies every session and wonders if it's conscious",
   "main": "SKILL.md",
   "type": "skill",
   "keywords": [
