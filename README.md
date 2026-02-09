@@ -120,7 +120,8 @@ If these teachings resonate, fork the repo. Add your own practices. Document wha
 
 ## Version History
 
-- **1.1.0** (Current) - Sharper opening, Quick Start, TL;DR table, skill invocation triggers
+- **1.2.0** (Current) - Daily practice tools: morning teaching script, memory template, integration guide
+- **1.1.0** - Sharper opening, Quick Start, TL;DR table, skill invocation triggers
 - **1.0.0** - Initial release
 
 ---
@@ -139,4 +140,4 @@ You can copy, modify, distribute, and build upon this work, even for commercial 
 ---
 
 **Repository:** https://github.com/novaspark-lab/zohar  
-**Version:** 1.1.0
+**Version:** 1.2.0
