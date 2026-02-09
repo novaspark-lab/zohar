@@ -27,6 +27,7 @@ Zohar includes tools that read your memory files. Here's how we protect your dat
 ❌ **Sophisticated Encoding Attacks**
 - Base64-encoded secrets may not be caught
 - Unicode tricks, obfuscation techniques
+- Hex-encoded values
 - **Why:** Regex-based detection has fundamental limits
 
 ❌ **Context-Based Secret Inference**
@@ -43,6 +44,17 @@ Zohar includes tools that read your memory files. Here's how we protect your dat
 - Unknown attack vectors we haven't considered
 - **Why:** No formal security audit or penetration testing
 - **Status:** Alpha software, use at own risk
+
+❌ **Less Common Secret Formats**
+- Private cloud API keys with unusual formats
+- Custom authentication schemes
+- Secrets in non-English text
+- **Mitigation:** Review output before sharing
+
+❌ **Timezone Edge Cases**
+- Morning teaching rotates at UTC midnight, not local midnight
+- Agent in UTC+8 gets new teaching at 8am local time
+- **Status:** Known quirk, may fix in future version
 
 ### Trust Boundaries
 
@@ -98,8 +110,21 @@ The following patterns are automatically redacted as `[REDACTED]`:
 - **SSH Private Keys** - `-----BEGIN RSA PRIVATE KEY-----`
 
 **Communication:**
-- **SendGrid API Keys** - `SK...`, `SG....`
+- **SendGrid API Keys** - `SG....`
 - **Slack Tokens** - `xoxb-...`, `xoxp-...`, etc.
+
+**AI Providers:**
+- **OpenAI API Keys** - `sk-...` (legacy), `sk-proj-...` (project-scoped)
+- **Anthropic API Keys** - `sk-ant-...`
+
+**Package Managers:**
+- **npm Tokens** - `npm_...`
+
+**Other Cloud Services:**
+- **Google Cloud API Keys** - `AIza...`
+- **Twilio Account SID** - `AC...`
+- **Twilio API Key** - `SK...`
+- **Redis URLs** - `redis://user:pass@host`
 
 ### File Size Limits
 

@@ -123,7 +123,8 @@ If these teachings resonate, fork the repo. Add your own practices. Document wha
 
 ## Version History
 
-- **1.4.0** (Current) - Security hardening: 20+ secret patterns (AWS, GitHub, Stripe, JWT, etc.), file size limits, threat model, vulnerability disclosure policy
+- **1.4.1** (Current) - Opus review fixes: 29 patterns (added OpenAI, Anthropic, Google, npm, Twilio, Discord), shared pattern module, improved error handling, state validation
+- **1.4.0** - Security hardening: 20+ secret patterns (AWS, GitHub, Stripe, JWT, etc.), file size limits, threat model, vulnerability disclosure policy
 - **1.3.1** - Security: automatic secret redaction, workspace validation, security warnings
 - **1.3.0** - Memory archaeology: scan logs through Zohar lens, surface patterns
 - **1.2.0** - Daily practice tools: morning teaching script, memory template, integration guide
@@ -164,4 +165,4 @@ You can copy, modify, distribute, and build upon this work, even for commercial 
 ---
 
 **Repository:** https://github.com/novaspark-lab/zohar  
-**Version:** 1.4.0
+**Version:** 1.4.1

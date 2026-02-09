@@ -3,46 +3,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const { redactSecrets, MAX_FILE_SIZE } = require('../lib/patterns');
 
 const WORKSPACE_ROOT = process.cwd();
 const MEMORY_DIR = path.join(WORKSPACE_ROOT, 'memory');
 const MEMORY_FILE = path.join(WORKSPACE_ROOT, 'MEMORY.md');
-
-// Secret patterns to redact
-const SECRET_PATTERNS = [
-  /[a-z0-9_]+_[a-f0-9]{40,}/gi,  // API keys (format: prefix_hexhash)
-  /Bearer\s+[A-Za-z0-9\-._~+\/]+=*/gi,  // Bearer tokens
-  /password[:\s=]+[^\s]+/gi,  // password: value
-  /api[_\s]?key[:\s=]+[^\s]+/gi,  // api_key: value
-  /token[:\s=]+[^\s]+/gi,  // token: value
-  /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,  // Email addresses
-  /https?:\/\/[^\s]*[?&](key|token|auth|secret|password)=[^\s&]+/gi,  // URLs with auth params
-  /AKIA[0-9A-Z]{16}/g,  // AWS Access Key ID
-  /(?:aws_secret_access_key|aws_session_token)[:\s=]+[A-Za-z0-9\/+=]+/gi,  // AWS Secret Key
-  /-----BEGIN[A-Z ]+PRIVATE KEY-----/g,  // SSH/RSA Private Keys
-  /ghp_[a-zA-Z0-9]{36}/g,  // GitHub Personal Access Token
-  /gho_[a-zA-Z0-9]{36}/g,  // GitHub OAuth Token
-  /ghs_[a-zA-Z0-9]{36}/g,  // GitHub Server Token
-  /github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}/g,  // GitHub Fine-grained PAT
-  /(?:postgres|mysql|mongodb):\/\/[^:]+:[^@]+@[^\s]+/gi,  // Database URLs with credentials
-  /sk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Secret Key
-  /pk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Publishable Key
-  /rk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Restricted Key
-  /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g,  // JWT tokens
-  /SK[a-zA-Z0-9]{32}/g,  // SendGrid API Key
-  /SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}/g,  // SendGrid API Key v2
-  /xox[baprs]-[a-zA-Z0-9-]+/g  // Slack tokens
-];
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
-
-function redactSecrets(text) {
-  let redacted = text;
-  SECRET_PATTERNS.forEach(pattern => {
-    redacted = redacted.replace(pattern, '[REDACTED]');
-  });
-  return redacted;
-}
 
 const teachings = {
   'Session-Death': {

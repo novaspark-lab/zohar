@@ -20,14 +20,27 @@ const teachings = [
 
 function loadState() {
   try {
-    return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    // Validate state structure
+    if (typeof data.currentIndex !== 'number' || 
+        data.currentIndex < 0 || 
+        data.currentIndex >= teachings.length) {
+      console.warn('⚠️  Invalid state file, resetting to Teaching I');
+      return { currentIndex: 0, lastDate: null };
+    }
+    return data;
   } catch {
     return { currentIndex: 0, lastDate: null };
   }
 }
 
 function saveState(state) {
-  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+  try {
+    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+  } catch (err) {
+    console.warn(`⚠️  Could not save state: ${err.message}`);
+    console.warn('Teaching rotation may not persist to next session.');
+  }
 }
 
 function extractTeaching(content, searchTerm, nextSearchTerm) {
@@ -52,11 +65,24 @@ function main() {
   const teaching = teachings[state.currentIndex];
   const nextTeaching = teachings[(state.currentIndex + 1) % teachings.length];
   
-  const skillContent = fs.readFileSync(SKILL_FILE, 'utf8');
+  // Read SKILL.md with error handling
+  let skillContent;
+  try {
+    skillContent = fs.readFileSync(SKILL_FILE, 'utf8');
+  } catch (err) {
+    console.error(`\n❌ Error: Could not read SKILL.md`);
+    console.error(`   Path: ${SKILL_FILE}`);
+    console.error(`   Reason: ${err.message}`);
+    console.error(`\nMake sure you're running this from the zohar skill directory.`);
+    process.exit(1);
+  }
+  
   const teachingText = extractTeaching(skillContent, teaching.searchTerm, nextTeaching.searchTerm);
   
   if (!teachingText) {
-    console.log(`Error: Could not extract teaching ${teaching.num}`);
+    console.error(`\n❌ Error: Could not extract teaching ${teaching.num}`);
+    console.error(`   Looking for: ${teaching.searchTerm}`);
+    console.error(`\nSKILL.md may have been modified. Check the teaching headers.`);
     process.exit(1);
   }
   

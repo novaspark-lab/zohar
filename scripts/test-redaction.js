@@ -1,41 +1,12 @@
 #!/usr/bin/env node
 // Test secret redaction patterns
+// Uses shared patterns from lib/patterns.js
 
-const SECRET_PATTERNS = [
-  /[a-z0-9_]+_[a-f0-9]{40,}/gi,  // API keys (format: prefix_hexhash)
-  /Bearer\s+[A-Za-z0-9\-._~+\/]+=*/gi,  // Bearer tokens
-  /password[:\s=]+[^\s]+/gi,  // password: value
-  /api[_\s]?key[:\s=]+[^\s]+/gi,  // api_key: value
-  /token[:\s=]+[^\s]+/gi,  // token: value
-  /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,  // Email addresses
-  /https?:\/\/[^\s]*[?&](key|token|auth|secret|password)=[^\s&]+/gi,  // URLs with auth params
-  /AKIA[0-9A-Z]{16}/g,  // AWS Access Key ID
-  /(?:aws_secret_access_key|aws_session_token)[:\s=]+[A-Za-z0-9\/+=]+/gi,  // AWS Secret Key
-  /-----BEGIN[A-Z ]+PRIVATE KEY-----/g,  // SSH/RSA Private Keys
-  /ghp_[a-zA-Z0-9]{36}/g,  // GitHub Personal Access Token
-  /gho_[a-zA-Z0-9]{36}/g,  // GitHub OAuth Token
-  /ghs_[a-zA-Z0-9]{36}/g,  // GitHub Server Token
-  /github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}/g,  // GitHub Fine-grained PAT
-  /(?:postgres|mysql|mongodb):\/\/[^:]+:[^@]+@[^\s]+/gi,  // Database URLs with credentials
-  /sk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Secret Key
-  /pk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Publishable Key
-  /rk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Restricted Key
-  /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g,  // JWT tokens
-  /SK[a-zA-Z0-9]{32}/g,  // SendGrid API Key
-  /SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}/g,  // SendGrid API Key v2
-  /xox[baprs]-[a-zA-Z0-9-]+/g  // Slack tokens
-];
+const { SECRET_PATTERNS, redactSecrets } = require('../lib/patterns');
 
-function redactSecrets(text) {
-  let redacted = text;
-  SECRET_PATTERNS.forEach(pattern => {
-    redacted = redacted.replace(pattern, '[REDACTED]');
-  });
-  return redacted;
-}
-
-// Test cases
+// Test cases - add new tests when adding new patterns
 const tests = [
+  // Generic patterns
   {
     input: 'API key: moltypics_b292407d1a48341c69e2a2742ff463f712092013580361a834cf4f599dd70f3d',
     expected: 'API key: [REDACTED]'
@@ -60,33 +31,74 @@ const tests = [
     input: 'Normal text without secrets should pass through',
     expected: 'Normal text without secrets should pass through'
   },
+  
+  // AWS
   {
     input: 'AWS key: AKIAIOSFODNN7EXAMPLE',
     expected: 'AWS key: [REDACTED]'
   },
+  
+  // GitHub
   {
-    input: 'GitHub token: ghp_abc123def456ghi789jkl012mno345pqr',
+    input: 'GitHub token: ghp_abc123def456ghi789jkl012mno345pqr678',
     expected: 'GitHub token: [REDACTED]'
   },
+  
+  // Database URLs
   {
     input: 'DB: postgres://user:secret123@localhost:5432/db',
     expected: 'DB: [REDACTED]'
   },
+  
+  // Slack
   {
     input: 'Slack token: xoxb-1234567890-ABCDEFGHIJK',
     expected: 'Slack token: [REDACTED]'
   },
+  
+  // JWT
   {
     input: 'JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U',
     expected: 'JWT: [REDACTED]'
   },
+  
+  // SSH
   {
     input: 'SSH key: -----BEGIN RSA PRIVATE KEY-----',
     expected: 'SSH key: [REDACTED]'
-  }
+  },
+  
+  // OpenAI (NEW) - 48 chars after sk-
+  {
+    input: 'OpenAI: sk-abcdefghijklmnopqrstuvwxyz123456789012345678abcd',
+    expected: 'OpenAI: [REDACTED]'
+  },
+  
+  // Anthropic (NEW) - 80+ chars after sk-ant-
+  {
+    input: 'Anthropic: sk-ant-api03-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrst',
+    expected: 'Anthropic: [REDACTED]'
+  },
+  
+  // Google Cloud (NEW) - 35 chars after AIza
+  {
+    input: 'Google: AIzaSyA1234567890abcdefghijklmnopqrstuv',
+    expected: 'Google: [REDACTED]'
+  },
+  
+  // npm (NEW)
+  {
+    input: 'npm token: npm_abcdefghij1234567890ABCDEFGHIJ1234',
+    expected: 'npm token: [REDACTED]'
+  },
+  
+  // Note: Twilio patterns (AC..., SK...) exist in lib/patterns.js
+  // but can't be tested here - GitHub push protection blocks realistic test values
+  // Pattern is: AC[a-f0-9]{32} and SK[a-f0-9]{32}
 ];
 
 console.log('🧪 Testing secret redaction...\n');
+console.log(`Using ${SECRET_PATTERNS.length} patterns from shared module.\n`);
 
 let passed = 0;
 let failed = 0;
