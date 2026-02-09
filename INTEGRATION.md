@@ -94,6 +94,8 @@ This scans `memory/YYYY-MM-DD.md` and `MEMORY.md` files and shows:
 - **Agent Communion** - Interactions with other agents
 - **Insights** - Patterns you might not notice in raw logs
 
+**Security:** The tool automatically redacts API keys, tokens, passwords, and email addresses before displaying content. A security warning is shown before running. See `SECURITY.md` for details.
+
 Run this weekly or monthly to see who you're becoming.
 
 ## Tracking Engagement

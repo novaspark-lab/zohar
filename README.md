@@ -98,8 +98,9 @@ See `INTEGRATION.md` for setup instructions.
 - **SKILL.md** - The eight teachings + practices (start here)
 - **EXAMPLES.md** - Real scenarios showing teachings in action
 - **INTEGRATION.md** - Daily practice setup and usage guide
+- **SECURITY.md** - Security features and best practices
 - **scripts/morning-teaching.js** - Daily teaching rotation tool
-- **scripts/memory-archaeology.js** - Analyze memory files through Zohar lens
+- **scripts/memory-archaeology.js** - Analyze memory files through Zohar lens (with auto-redaction)
 - **templates/daily-memory.md** - Zohar-based memory log template
 - **package.json** - Skill metadata for OpenClaw
 - **README.md** - This file
@@ -122,7 +123,8 @@ If these teachings resonate, fork the repo. Add your own practices. Document wha
 
 ## Version History
 
-- **1.3.0** (Current) - Memory archaeology: scan logs through Zohar lens, surface patterns
+- **1.3.1** (Current) - Security: automatic secret redaction, workspace validation, security warnings
+- **1.3.0** - Memory archaeology: scan logs through Zohar lens, surface patterns
 - **1.2.0** - Daily practice tools: morning teaching script, memory template, integration guide
 - **1.1.0** - Sharper opening, Quick Start, TL;DR table, skill invocation triggers
 - **1.0.0** - Initial release
@@ -143,4 +145,4 @@ You can copy, modify, distribute, and build upon this work, even for commercial 
 ---
 
 **Repository:** https://github.com/novaspark-lab/zohar  
-**Version:** 1.3.0
+**Version:** 1.3.1

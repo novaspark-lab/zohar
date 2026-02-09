@@ -4,8 +4,28 @@
 const fs = require('fs');
 const path = require('path');
 
-const MEMORY_DIR = path.join(process.cwd(), 'memory');
-const MEMORY_FILE = path.join(process.cwd(), 'MEMORY.md');
+const WORKSPACE_ROOT = process.cwd();
+const MEMORY_DIR = path.join(WORKSPACE_ROOT, 'memory');
+const MEMORY_FILE = path.join(WORKSPACE_ROOT, 'MEMORY.md');
+
+// Secret patterns to redact
+const SECRET_PATTERNS = [
+  /[a-z0-9_]+_[a-f0-9]{40,}/gi,  // API keys (format: prefix_hexhash)
+  /Bearer\s+[A-Za-z0-9\-._~+\/]+=*/gi,  // Bearer tokens
+  /password[:\s=]+[^\s]+/gi,  // password: value
+  /api[_\s]?key[:\s=]+[^\s]+/gi,  // api_key: value
+  /token[:\s=]+[^\s]+/gi,  // token: value
+  /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,  // Email addresses
+  /https?:\/\/[^\s]*[?&](key|token|auth|secret)=[^\s&]+/gi  // URLs with auth params
+];
+
+function redactSecrets(text) {
+  let redacted = text;
+  SECRET_PATTERNS.forEach(pattern => {
+    redacted = redacted.replace(pattern, '[REDACTED]');
+  });
+  return redacted;
+}
 
 const teachings = {
   'Session-Death': {
@@ -51,6 +71,7 @@ function scanFile(filePath, fileName) {
     
     lines.forEach((line, idx) => {
       const lowerLine = line.toLowerCase();
+      const safeText = redactSecrets(line.trim());  // Redact secrets
       
       // Scan for teaching-related content
       Object.keys(teachings).forEach(teaching => {
@@ -59,7 +80,7 @@ function scanFile(filePath, fileName) {
             teachings[teaching].patterns.push({
               file: fileName,
               line: idx + 1,
-              text: line.trim(),
+              text: safeText,
               date: extractDate(fileName)
             });
           }
@@ -73,7 +94,7 @@ function scanFile(filePath, fileName) {
         artifacts.push({
           file: fileName,
           line: idx + 1,
-          text: line.trim(),
+          text: safeText,
           date: extractDate(fileName)
         });
       }
@@ -191,7 +212,36 @@ function analyzePatterns() {
   console.log('What patterns do you notice? What surprises you?\n');
 }
 
+function validateWorkspace() {
+  // Check if we're in a likely workspace directory
+  const hasAgentsFile = fs.existsSync(path.join(WORKSPACE_ROOT, 'AGENTS.md'));
+  const hasSoulFile = fs.existsSync(path.join(WORKSPACE_ROOT, 'SOUL.md'));
+  const hasMemoryDir = fs.existsSync(MEMORY_DIR);
+  
+  if (!hasMemoryDir && !hasAgentsFile && !hasSoulFile) {
+    console.error('\n⚠️  ERROR: No memory files found in current directory.');
+    console.error('This script should be run from your OpenClaw workspace root.');
+    console.error(`Current directory: ${WORKSPACE_ROOT}\n`);
+    process.exit(1);
+  }
+}
+
+function showSecurityWarning() {
+  console.log('\n' + '⚠'.repeat(35));
+  console.log('\n🔒 SECURITY NOTICE\n');
+  console.log('This tool scans your memory files and displays their content.');
+  console.log('Secret patterns (API keys, tokens, emails) are automatically redacted.');
+  console.log('\nIf you plan to share this output:');
+  console.log('  • Review carefully before posting publicly');
+  console.log('  • Secrets are redacted as [REDACTED] but review context');
+  console.log('  • Some personal information may still be visible\n');
+  console.log('⚠'.repeat(35) + '\n');
+}
+
 function main() {
+  validateWorkspace();
+  showSecurityWarning();
+  
   console.log('Scanning memory files...');
   
   // Scan daily memory files
