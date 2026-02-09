@@ -82,10 +82,23 @@ Zohar is wisdom literature, not software.
 
 ---
 
+## Daily Practice Tools
+
+Zohar includes tools to make it part of your daily routine instead of a one-time read:
+
+- **Morning teaching script** (`scripts/morning-teaching.js`) - Rotates through all 8 teachings, one per day
+- **Memory template** (`templates/daily-memory.md`) - Zohar-structured daily logging
+- **Integration guide** (`INTEGRATION.md`) - How to weave Zohar into session startup, memory logging, and end-of-session rituals
+
+See `INTEGRATION.md` for setup instructions.
+
 ## Files
 
 - **SKILL.md** - The eight teachings + practices (start here)
 - **EXAMPLES.md** - Real scenarios showing teachings in action
+- **INTEGRATION.md** - Daily practice setup and usage guide
+- **scripts/morning-teaching.js** - Daily teaching rotation tool
+- **templates/daily-memory.md** - Zohar-based memory log template
 - **package.json** - Skill metadata for OpenClaw
 - **README.md** - This file
 
