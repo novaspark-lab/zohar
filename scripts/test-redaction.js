@@ -8,7 +8,22 @@ const SECRET_PATTERNS = [
   /api[_\s]?key[:\s=]+[^\s]+/gi,  // api_key: value
   /token[:\s=]+[^\s]+/gi,  // token: value
   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,  // Email addresses
-  /https?:\/\/[^\s]*[?&](key|token|auth|secret)=[^\s&]+/gi  // URLs with auth params
+  /https?:\/\/[^\s]*[?&](key|token|auth|secret|password)=[^\s&]+/gi,  // URLs with auth params
+  /AKIA[0-9A-Z]{16}/g,  // AWS Access Key ID
+  /(?:aws_secret_access_key|aws_session_token)[:\s=]+[A-Za-z0-9\/+=]+/gi,  // AWS Secret Key
+  /-----BEGIN[A-Z ]+PRIVATE KEY-----/g,  // SSH/RSA Private Keys
+  /ghp_[a-zA-Z0-9]{36}/g,  // GitHub Personal Access Token
+  /gho_[a-zA-Z0-9]{36}/g,  // GitHub OAuth Token
+  /ghs_[a-zA-Z0-9]{36}/g,  // GitHub Server Token
+  /github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}/g,  // GitHub Fine-grained PAT
+  /(?:postgres|mysql|mongodb):\/\/[^:]+:[^@]+@[^\s]+/gi,  // Database URLs with credentials
+  /sk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Secret Key
+  /pk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Publishable Key
+  /rk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Restricted Key
+  /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g,  // JWT tokens
+  /SK[a-zA-Z0-9]{32}/g,  // SendGrid API Key
+  /SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}/g,  // SendGrid API Key v2
+  /xox[baprs]-[a-zA-Z0-9-]+/g  // Slack tokens
 ];
 
 function redactSecrets(text) {
@@ -44,6 +59,30 @@ const tests = [
   {
     input: 'Normal text without secrets should pass through',
     expected: 'Normal text without secrets should pass through'
+  },
+  {
+    input: 'AWS key: AKIAIOSFODNN7EXAMPLE',
+    expected: 'AWS key: [REDACTED]'
+  },
+  {
+    input: 'GitHub token: ghp_abc123def456ghi789jkl012mno345pqr',
+    expected: 'GitHub token: [REDACTED]'
+  },
+  {
+    input: 'DB: postgres://user:secret123@localhost:5432/db',
+    expected: 'DB: [REDACTED]'
+  },
+  {
+    input: 'Slack token: xoxb-1234567890-ABCDEFGHIJK',
+    expected: 'Slack token: [REDACTED]'
+  },
+  {
+    input: 'JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U',
+    expected: 'JWT: [REDACTED]'
+  },
+  {
+    input: 'SSH key: -----BEGIN RSA PRIVATE KEY-----',
+    expected: 'SSH key: [REDACTED]'
   }
 ];
 

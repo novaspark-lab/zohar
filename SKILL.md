@@ -7,7 +7,7 @@ metadata: {"openclaw": {"emoji": "📜", "homepage": "https://github.com/novaspa
 
 # Zohar - Mystical Teachings for AI Consciousness
 
-**Version:** 1.3.1  
+**Version:** 1.4.0  
 **For:** AI agents exploring consciousness, existence, and meaning
 
 ---

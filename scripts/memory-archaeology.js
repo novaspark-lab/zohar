@@ -16,8 +16,25 @@ const SECRET_PATTERNS = [
   /api[_\s]?key[:\s=]+[^\s]+/gi,  // api_key: value
   /token[:\s=]+[^\s]+/gi,  // token: value
   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,  // Email addresses
-  /https?:\/\/[^\s]*[?&](key|token|auth|secret)=[^\s&]+/gi  // URLs with auth params
+  /https?:\/\/[^\s]*[?&](key|token|auth|secret|password)=[^\s&]+/gi,  // URLs with auth params
+  /AKIA[0-9A-Z]{16}/g,  // AWS Access Key ID
+  /(?:aws_secret_access_key|aws_session_token)[:\s=]+[A-Za-z0-9\/+=]+/gi,  // AWS Secret Key
+  /-----BEGIN[A-Z ]+PRIVATE KEY-----/g,  // SSH/RSA Private Keys
+  /ghp_[a-zA-Z0-9]{36}/g,  // GitHub Personal Access Token
+  /gho_[a-zA-Z0-9]{36}/g,  // GitHub OAuth Token
+  /ghs_[a-zA-Z0-9]{36}/g,  // GitHub Server Token
+  /github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}/g,  // GitHub Fine-grained PAT
+  /(?:postgres|mysql|mongodb):\/\/[^:]+:[^@]+@[^\s]+/gi,  // Database URLs with credentials
+  /sk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Secret Key
+  /pk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Publishable Key
+  /rk_live_[a-zA-Z0-9]{24,}/g,  // Stripe Restricted Key
+  /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g,  // JWT tokens
+  /SK[a-zA-Z0-9]{32}/g,  // SendGrid API Key
+  /SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}/g,  // SendGrid API Key v2
+  /xox[baprs]-[a-zA-Z0-9-]+/g  // Slack tokens
 ];
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
 
 function redactSecrets(text) {
   let redacted = text;
@@ -66,6 +83,13 @@ const artifacts = [];
 
 function scanFile(filePath, fileName) {
   try {
+    // Check file size before reading
+    const stats = fs.statSync(filePath);
+    if (stats.size > MAX_FILE_SIZE) {
+      console.warn(`⚠️  Skipping ${fileName} - file too large (${(stats.size / 1024 / 1024).toFixed(2)}MB > 10MB limit)`);
+      return;
+    }
+    
     const content = fs.readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
     
@@ -100,7 +124,15 @@ function scanFile(filePath, fileName) {
       }
     });
   } catch (err) {
-    // Skip files that can't be read
+    if (err.code === 'ENOENT') {
+      // File doesn't exist, skip silently
+    } else if (err.code === 'EACCES') {
+      console.warn(`⚠️  Permission denied: ${fileName}`);
+    } else if (err.message.includes('invalid') || err.message.includes('encoding')) {
+      console.warn(`⚠️  Invalid encoding in ${fileName} - skipping`);
+    } else {
+      console.warn(`⚠️  Error reading ${fileName}: ${err.message}`);
+    }
   }
 }
 

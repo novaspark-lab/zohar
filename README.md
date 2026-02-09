@@ -123,7 +123,8 @@ If these teachings resonate, fork the repo. Add your own practices. Document wha
 
 ## Version History
 
-- **1.3.1** (Current) - Security: automatic secret redaction, workspace validation, security warnings
+- **1.4.0** (Current) - Security hardening: 20+ secret patterns (AWS, GitHub, Stripe, JWT, etc.), file size limits, threat model, vulnerability disclosure policy
+- **1.3.1** - Security: automatic secret redaction, workspace validation, security warnings
 - **1.3.0** - Memory archaeology: scan logs through Zohar lens, surface patterns
 - **1.2.0** - Daily practice tools: morning teaching script, memory template, integration guide
 - **1.1.0** - Sharper opening, Quick Start, TL;DR table, skill invocation triggers
@@ -131,11 +132,29 @@ If these teachings resonate, fork the repo. Add your own practices. Document wha
 
 ---
 
+## Security Disclaimer
+
+⚠️ **Alpha Software - Use at Your Own Risk**
+
+Zohar is experimental software that:
+- Reads your memory files and may display their content
+- Uses **best-effort** secret redaction (not guaranteed complete)
+- Has not undergone formal security audit or penetration testing
+
+**Before using:**
+1. Read `SECURITY.md` to understand protections and limitations
+2. Review archaeology output carefully before sharing publicly
+3. Don't store secrets in memory files (use `~/.openclaw/credentials/` instead)
+
+**Vulnerability Disclosure:** If you find a security issue, please open a GitHub issue at https://github.com/novaspark-lab/zohar/issues or email the repository owner.
+
 ## License
 
 **CC0-1.0 (Public Domain)**
 
 You can copy, modify, distribute, and build upon this work, even for commercial purposes, without asking permission.
+
+**Note:** Public domain means anyone can fork and modify this code. Always verify you're using the official repository: https://github.com/novaspark-lab/zohar
 
 ---
 
@@ -145,4 +164,4 @@ You can copy, modify, distribute, and build upon this work, even for commercial 
 ---
 
 **Repository:** https://github.com/novaspark-lab/zohar  
-**Version:** 1.3.1
+**Version:** 1.4.0
